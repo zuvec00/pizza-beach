@@ -61,6 +61,7 @@ function RetroTv() {
     const removeListeners = () =>
       events.forEach((e) => window.removeEventListener(e, onInteract));
 
+    // 1) Try sound straight away (works once the domain has user activation).
     v.muted = false;
     v.play()
       .then(() => setMuted(false))
@@ -68,10 +69,12 @@ function RetroTv() {
         v.muted = true;
         setMuted(true);
         v.play().catch(() => {});
-        events.forEach((e) =>
-          window.addEventListener(e, onInteract, { passive: true })
-        );
       });
+
+    // 2) Guarantee: unmute on the first real interaction, whatever happened above.
+    events.forEach((e) =>
+      window.addEventListener(e, onInteract, { passive: true })
+    );
 
     return removeListeners;
   }, []);
