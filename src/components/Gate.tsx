@@ -24,7 +24,7 @@ export function Gate({ guest, onPass }: { guest: Guest; onPass: () => void }) {
     if (isAnswerCorrect(guest, trimmed)) {
       setFailMsg("");
       setSuccess(true);
-      window.setTimeout(onPass, 1600); // success beat → advance (spec §3.3)
+      window.setTimeout(onPass, 2400); // box-open reveal → advance (spec §3.3)
       return;
     }
     setFailMsg(FAIL_MESSAGES[failIndex.current % FAIL_MESSAGES.length]);
@@ -141,24 +141,57 @@ export function Gate({ guest, onPass }: { guest: Guest; onPass: () => void }) {
         </div>
       </main>
 
-      {/* Success overlay */}
-      <div
-        className={`fixed inset-0 z-50 bg-primary-container flex items-center justify-center transition-opacity duration-500 ${
-          success ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
-      >
-        <div
-          className={`text-center space-y-4 transition-transform duration-500 ${
-            success ? "scale-100" : "scale-90"
-          }`}
-        >
-          <h2 className="font-display-lg text-display-lg text-on-primary-container uppercase italic">
-            You're In!
-          </h2>
-          <p className="font-headline-sm text-headline-sm text-on-primary-container">
-            Opening the box...
-          </p>
+      {/* Success — pizza box opens to reveal the pie */}
+      {success && <BoxReveal firstName={firstName} />}
+    </div>
+  );
+}
+
+const REVEAL_PEPPERONI = [
+  { top: "16%", left: "20%", size: "21%" },
+  { top: "24%", left: "60%", size: "17%" },
+  { top: "56%", left: "26%", size: "19%" },
+  { top: "60%", left: "62%", size: "21%" },
+  { top: "42%", left: "46%", size: "15%" },
+  { top: "72%", left: "44%", size: "14%" },
+];
+
+function BoxReveal({ firstName }: { firstName: string }) {
+  return (
+    <div className="reveal-overlay fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 px-6">
+      <div className="box-scene">
+        <div className="pbox">
+          {/* Open box bottom holding the pizza */}
+          <div className="pbox-base pbox-cardboard">
+            <div className="reveal-pizza">
+              {REVEAL_PEPPERONI.map((p, i) => (
+                <div
+                  key={i}
+                  className="reveal-pep"
+                  style={{
+                    top: p.top,
+                    left: p.left,
+                    width: p.size,
+                    height: p.size,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+          {/* Lid that flips open */}
+          <div className="pbox-lid pbox-cardboard">
+            <div className="lid-stamp">🍕</div>
+          </div>
         </div>
+      </div>
+
+      <div className="reveal-text text-center">
+        <h2 className="font-display-lg text-display-lg text-on-primary-container uppercase italic leading-none">
+          You're in, {firstName}!
+        </h2>
+        <p className="font-headline-sm text-headline-sm text-on-primary-container mt-2">
+          Dishing up your invite…
+        </p>
       </div>
     </div>
   );

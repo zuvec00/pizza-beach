@@ -40,6 +40,51 @@ function PizzaBackground() {
 
 function RetroTv() {
   const [failed, setFailed] = useState(false);
+  const [muted, setMuted] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Try to autoplay WITH sound (the gate tap counts as user activation).
+  // If the browser blocks it, fall back to muted autoplay and unmute on the
+  // first interaction anywhere (tap/scroll/keypress) — so sound comes on
+  // almost immediately without the guest hunting for a button.
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    const events = ["pointerdown", "touchstart", "keydown"] as const;
+    const onInteract = () => {
+      v.muted = false;
+      setMuted(false);
+      v.play().catch(() => {});
+      removeListeners();
+    };
+    const removeListeners = () =>
+      events.forEach((e) => window.removeEventListener(e, onInteract));
+
+    v.muted = false;
+    v.play()
+      .then(() => setMuted(false))
+      .catch(() => {
+        v.muted = true;
+        setMuted(true);
+        v.play().catch(() => {});
+        events.forEach((e) =>
+          window.addEventListener(e, onInteract, { passive: true })
+        );
+      });
+
+    return removeListeners;
+  }, []);
+
+  function toggleSound() {
+    const v = videoRef.current;
+    if (!v) return;
+    const next = !muted;
+    v.muted = next;
+    setMuted(next);
+    if (!next) v.play().catch(() => {});
+  }
+
   return (
     <section className="relative mt-2">
       {/* Antenna */}
@@ -64,9 +109,10 @@ function RetroTv() {
             />
           ) : (
             <video
+              ref={videoRef}
               src={EVENT.videoSrc}
               poster={EVENT.videoPoster}
-              muted
+              muted={muted}
               loop
               autoPlay
               playsInline
@@ -85,7 +131,24 @@ function RetroTv() {
               REC
             </span>
           </div>
+          {/* Sound toggle */}
+          {!failed && (
+            <button
+              onClick={toggleSound}
+              aria-label={muted ? "Unmute video" : "Mute video"}
+              className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/45 text-white flex items-center justify-center backdrop-blur-sm active:scale-95 transition-transform"
+            >
+              <span className="material-symbols-outlined text-[20px]">
+                {muted ? "volume_off" : "volume_up"}
+              </span>
+            </button>
+          )}
         </div>
+        {muted && !failed && (
+          <p className="absolute left-1/2 -translate-x-1/2 bottom-1 text-[10px] font-label-bold uppercase tracking-widest text-white/70">
+            Tap 🔊 for sound
+          </p>
+        )}
         {/* Knobs */}
         <div className="absolute right-8 bottom-4 flex flex-col gap-2">
           <div className="w-6 h-6 rounded-full bg-secondary-container border-2 border-tv-bezel shadow-inner" />
@@ -141,12 +204,12 @@ function EventInfo({ onSeeRules }: { onSeeRules: () => void }) {
           onClick={onSeeRules}
           className="bg-primary text-white font-headline-sm text-headline-sm py-4 rounded-xl pixel-border active-click transition-all flex items-center justify-center gap-2 uppercase tracking-tighter"
         >
-          The rules / more info
+          Crucial info
           <span className="material-symbols-outlined">arrow_forward</span>
         </button>
-        <p className="font-body-md text-body-md text-on-surface-variant text-center">
-          Give the rules a read first — your RSVP buttons are waiting at the
-          bottom. 🍕
+        <p className="font-body-md text-body-md text-on-surface-variant text-center italic">
+          Give the crucial info a read first — your RSVP buttons are waiting at
+          the bottom. 🍕
         </p>
       </section>
     </>
@@ -162,6 +225,19 @@ function Detail({ icon, text }: { icon: string; text: string }) {
   );
 }
 
+// Split a rule on ==…== markers and wrap the marked segments in a highlight.
+function renderHighlights(text: string) {
+  return text.split("==").map((seg, i) =>
+    i % 2 === 1 ? (
+      <mark key={i} className="rule-hl">
+        {seg}
+      </mark>
+    ) : (
+      <span key={i}>{seg}</span>
+    )
+  );
+}
+
 function Rules({
   guest,
   acknowledged,
@@ -171,9 +247,20 @@ function Rules({
   acknowledged: boolean;
   setAcknowledged: (v: boolean) => void;
 }) {
+  // Build the per-guest rule list: drop the placeholder for guests with no
+  // personalized item; otherwise swap in their (fully highlighted) bring rule.
+  const rules = EVENT.rules.flatMap((rule) => {
+    if (rule === "__BRING__") {
+      return guest.bringItem
+        ? [`==Bring ${guest.bringItem} prior to pulling up.==`]
+        : [];
+    }
+    return [rule];
+  });
+
   return (
     <>
-      <section className="bg-surface-bright border-2 border-tertiary p-6 rounded-xl pixel-border flex flex-col gap-6">
+      <section className="bg-surface-bright border-2 border-tertiary p-6 rounded-xl pixel-border -rotate-1 flex flex-col gap-6">
         <h3 className="font-display-lg-mobile text-display-lg-mobile text-primary text-center uppercase">
           The Protocol
         </h3>
@@ -181,12 +268,14 @@ function Rules({
           {EVENT.rulesIntro}
         </p>
         <ul className="flex flex-col gap-4">
-          {EVENT.rules.map((rule, i) => (
+          {rules.map((rule, i) => (
             <li key={rule} className="flex gap-3">
               <span className="font-headline-sm text-headline-sm text-secondary">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <p className="font-body-md text-body-md text-on-surface">{rule}</p>
+              <p className="font-body-md text-body-md text-on-surface">
+                {renderHighlights(rule)}
+              </p>
             </li>
           ))}
         </ul>
@@ -212,14 +301,14 @@ function Rules({
           enabled={acknowledged}
           className="bg-primary text-white"
         >
-          I'm in! <span className="text-2xl">🍕</span>
+          We active <span className="text-2xl">🍕</span>
         </RsvpButton>
         <RsvpButton
           href={whatsappLink(guest.name, "decline")}
           enabled={acknowledged}
           className="bg-secondary-container text-on-secondary-container"
         >
-          Can't make it
+          No desire
         </RsvpButton>
         {!acknowledged && (
           <p className="font-label-bold text-label-bold text-on-surface-variant text-center uppercase tracking-wider">

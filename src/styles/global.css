@@ -174,12 +174,163 @@ body {
   animation-delay: var(--delay, 0s);
 }
 
+/* Highlighter effect for key phrases in the rules */
+.rule-hl {
+  background-color: #ffce6b;
+  color: #5a3500;
+  font-weight: 700;
+  padding: 0 4px;
+  border-radius: 4px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ---- Pizza-box reveal (gate success) ---- */
+.reveal-overlay {
+  background: radial-gradient(circle at 50% 38%, #c73e1d, #8c2212 75%);
+}
+
+.box-scene {
+  perspective: 1200px;
+}
+
+.pbox {
+  position: relative;
+  width: min(76vw, 300px);
+  height: min(76vw, 300px);
+  transform-style: preserve-3d;
+  animation: box-drop 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Corrugated cardboard look */
+.pbox-cardboard {
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.04) 0 6px,
+      transparent 6px 12px
+    ),
+    linear-gradient(160deg, #d8973f, #b3762f);
+  border: 3px solid #7d5320;
+}
+
+.pbox-base {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 34px rgba(80, 40, 10, 0.45);
+}
+
+.pbox-lid {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  transform-origin: 50% 0%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  box-shadow: 0 -8px 18px rgba(0, 0, 0, 0.25);
+  animation: lid-open 1s cubic-bezier(0.5, 0, 0.2, 1) 0.6s both;
+}
+
+/* Wax-seal style pizza stamp on the lid */
+.lid-stamp {
+  width: 46%;
+  height: 46%;
+  border-radius: 50%;
+  border: 4px dashed rgba(125, 83, 32, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(36px, 12vw, 64px);
+}
+
+.reveal-pizza {
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  position: relative;
+  background: radial-gradient(circle at 50% 45%, #f3c660 0 60%, #e6a338 60% 100%);
+  box-shadow: 0 0 0 7px #c98a3f, inset 0 0 26px rgba(150, 90, 20, 0.4);
+  animation: pizza-pop 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) 1.05s both;
+}
+
+.reveal-pep {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 36%, #cf4a27, #a82c16 72%);
+  box-shadow:
+    inset 0 0 0 3px rgba(122, 28, 12, 0.5),
+    inset -3px -4px 8px rgba(80, 16, 8, 0.35);
+}
+
+.reveal-text {
+  animation: reveal-text 0.5s ease 1.35s both;
+}
+
+@keyframes lid-open {
+  0% {
+    transform: rotateX(0deg);
+  }
+  100% {
+    transform: rotateX(-122deg);
+  }
+}
+
+@keyframes box-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-28px) scale(0.86) rotate(-2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(-1.5deg);
+  }
+}
+
+@keyframes pizza-pop {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes reveal-text {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .shake-animation,
   .modal-enter,
   .animate-noise,
   .animate-pulse,
-  .pepperoni-anim {
+  .pepperoni-anim,
+  .pbox,
+  .pbox-lid,
+  .reveal-pizza,
+  .reveal-text {
     animation: none !important;
+  }
+  /* Skip straight to the open pie for reduced-motion users */
+  .pbox-lid {
+    transform: rotateX(-122deg);
   }
 }

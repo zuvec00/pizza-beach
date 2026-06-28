@@ -4,21 +4,21 @@ export const EVENT = {
   date: "Saturday, July 4, 2026",
   time: "1:00 PM",
   location: "Avista Beach, Raliatu Olorunfunmike St, Eti-Osa, Lagos",
-  entryFee: "Beach entry is on the celebrants 🎟️",
+  entryFee: "Beach entry is on the birthdays 🎟️",
   rulesIntro: "The Avista protocol — read it before you pull up:",
+  // Text wrapped in ==…== renders as a highlighted segment.
+  // "__BRING__" is replaced per-guest with their personalized item (or removed).
   rules: [
     "There are two spots for the birthday: the shoreline and the villa.",
     "The villa is for chilling; the shoreline is for party activities.",
-    "Bring swimwear — there's an indoor pool in the villa.",
-    "Rides don't come to the coastal line after 9pm — come early to vibe early!",
-    "No plus-ones. The guest list is strictly INVITE ONLY.",
-    "Labeld is the official ticketing platform for Avista — make all beach-activity payments through the Labeld app.",
-    "Bring a bottle of alc prior to pulling up.",
-    "Bring 3 bottles of fruit juice prior to pulling up.",
-    "Bring a pack of Sprite/Fanta prior to pulling up.",
-    "DON'T BREAK ANYTHING. Each person is responsible for any item broken in the villa.",
-    "If there's any chance you can't make it — or can't meet any of the rules — alert the birthdays ASAP.",
-    "Come ready to have fun, make friends and vibe!",
+    "==Bring swimwear== — there's an indoor pool in the villa.",
+    "Rides don't come to the coastal line after 9pm — ==come early to vibe early!==",
+    "==No plus-ones.== The guest list is strictly ==INVITE ONLY.==",
+    "==Labeld== is the official ticketing platform for Avista — make all beach-activity payments through the Labeld app.",
+    "__BRING__",
+    "==DON'T BREAK ANYTHING.== Each person is responsible for any item broken in the villa.",
+    "If there's any chance you can't make it — or can't meet any of the rules — ==alert the birthdays ASAP.==",
+    "==Come ready to have fun, make friends and vibe!==",
   ],
   // Host number, international format, NO + or spaces (required for wa.me links).
   whatsappNumber: "2349074678443", //+2349074678443

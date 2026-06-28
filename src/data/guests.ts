@@ -3,6 +3,7 @@ export type Guest = {
   name: string; // "Folz" - display + WhatsApp message
   question: string; // personalized gate question shown on screen 1
   acceptableAnswers: string[]; // lowercase, trimmed accepted answers
+  bringItem?: string; // personalized "what to bring" rule (omit if none)
 };
 
 export const GUESTS: Guest[] = [
@@ -17,6 +18,7 @@ export const GUESTS: Guest[] = [
     name: "Prince",
     question: "L is for what?",
     acceptableAnswers: ["labeld"],
+    bringItem: "3 packs of fruit juice",
   },
   {
     slug: "charles",
@@ -24,54 +26,63 @@ export const GUESTS: Guest[] = [
     question:
       "You and Zuky have been involved with a set of twins in the past — what is their surname?",
     acceptableAnswers: ["ukazu"],
+    bringItem: "a bottle of alc",
   },
   {
     slug: "dejo",
     name: "Dejo",
     question: "What term do we usually use to refer to Ebuka and Zuky's house?",
     acceptableAnswers: ["the promised land", "promised land"],
+    bringItem: "a bottle of alc",
   },
   {
     slug: "ak",
     name: "AK",
     question: "Who told you and Ebuka to build a mansion in two years?",
     acceptableAnswers: ["grandma"],
+    bringItem: "a pack of Sprite/Fanta",
   },
   {
     slug: "abdul",
     name: "Abdul",
     question: 'Which girl did you and Ebuka "fight" over?',
     acceptableAnswers: ["dalu"],
+    bringItem: "a bottle of alc",
   },
   {
     slug: "kachi",
     name: "Kachi",
     question: "What day of the week were you and Ebuka born?",
     acceptableAnswers: ["thursday"],
+    bringItem: "a bottle of alc",
   },
   {
     slug: "collins",
     name: "Collins",
     question: "How many years were you and Ebuka roommates?",
     acceptableAnswers: ["3", "three"],
+    bringItem: "3 packs of fruit juice",
   },
   {
     slug: "micheal",
     name: "Micheal",
     question: "How many years were you and Ebuka classmates in JMC?",
     acceptableAnswers: ["6", "six"],
+    bringItem: "a pack of Sprite/Fanta",
   },
   {
     slug: "obinna",
     name: "Obinna",
     question: "Which girl did you and Ebuka both like?",
     acceptableAnswers: ["soluzo"],
+    bringItem: "a pack of Sprite/Fanta",
   },
   {
     slug: "lade",
     name: "Lade",
     question: "You, Ebuka, and who took pictures together on graduation day?",
     acceptableAnswers: ["daniel"],
+    bringItem: "3 packs of fruit juice",
   },
   {
     slug: "temi",
@@ -90,6 +101,7 @@ export const GUESTS: Guest[] = [
     name: "Dami",
     question: "What version of pancakes did you introduce Zuky and friends to?",
     acceptableAnswers: ["chocolate pancakes", "chocolate"],
+    bringItem: "a bottle of alc",
   },
   {
     slug: "gwyneth",
@@ -111,6 +123,7 @@ export const GUESTS: Guest[] = [
     question:
       "What is the nickname of you and Zuky's joint fav roommate from year 1?",
     acceptableAnswers: ["thugger"],
+    bringItem: "3 packs of fruit juice",
   },
   {
     slug: "ogo",
@@ -142,6 +155,7 @@ export const GUESTS: Guest[] = [
     name: "Une",
     question: "What role did Zuky opt to play in your music career?",
     acceptableAnswers: ["manager"],
+    bringItem: "3 packs of fruit juice",
   },
   {
     slug: "desola",
@@ -154,6 +168,7 @@ export const GUESTS: Guest[] = [
     name: "MJ",
     question: "What important item of Zuky's have you lost at a party before?",
     acceptableAnswers: ["laptop"],
+    bringItem: "a bottle of alc",
   },
   {
     slug: "simi",
