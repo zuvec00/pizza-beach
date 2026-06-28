@@ -32,7 +32,7 @@ export const EVENT = {
 export function whatsappLink(name: string, action: "accept" | "decline"): string {
   const message =
     action === "accept"
-      ? `Hey i'm ${name}, i'll be there for the Pizza Beach Birthday 🍕🌊`
+      ? `Hey i'm ${name}, i'm active no matter what for the Pizza Beach Birthday 🍕🌊`
       : `Hey i'm ${name}, i won't be able to make it to the Pizza Beach Birthday 😩 ...and honestly, i hate you for it 😭🍕`;
   return `https://wa.me/${EVENT.whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
