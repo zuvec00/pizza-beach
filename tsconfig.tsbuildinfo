@@ -1,0 +1,1 @@
+{"root":["./src/main.tsx","./src/vite-env.d.ts","./src/components/gate.tsx","./src/components/invite.tsx","./src/data/event.ts","./src/data/guests.ts","./src/pages/invitepage.tsx","./src/pages/notfound.tsx","./vite.config.ts"],"version":"5.9.3"}
